@@ -1,0 +1,32 @@
+version: "3.1"
+services:
+  php-fpm:
+    restart: "no"
+    build:
+      context: .
+    volumes:
+      - ./src:/var/www/html
+    entrypoint: sh -c "/usr/local/bin/composer.phar install"
+    depends_on:
+      - sqldb
+    networks:
+      - default
+    expose:
+      - 9000
+  sqldb:
+    image: mysql
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: MY_SUPERSECRET_PWD_ROOT
+      MYSQL_DATABASE: autodrive
+      MYSQL_USER: autodrive
+      MYSQL_PASSWORD: MY_SUPERSECRET_PWD
+    volumes:
+      - ./extra/db/initial/:/docker-entrypoint-initdb.d/
+      - ./extra/db/cfg:/etc/mysql/conf.d/
+    ports:
+      - "33012:3306"
+    networks:
+      - default
+
+

@@ -1,0 +1,29 @@
+{
+  "name": "alexy/test_work",
+  "description": "Test work for Autodrive.ru",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Alex Yeropudov",
+      "email": "oleksandr.yeropudov@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4",
+    "ext-pdo_mysql": "*",
+    "ext-pdo": "*",
+    "symfony/dependency-injection": "^5.4",
+    "symfony/console": "^5.4",
+    "symfony/config": "^5.4",
+    "symfony/yaml": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Services\\": "Services/",
+      "Adapters\\": "Adapters/",
+      "Parsers\\": "Parsers/",
+      "Models\\": "Models/"
+    }
+  }
+}

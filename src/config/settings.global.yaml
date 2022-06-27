@@ -1,0 +1,15 @@
+parameters:
+  database:
+    host: "sqldb"
+    user: "autodrive"
+    password: "MY_SUPERSECRET_PWD"
+    dbname: "autodrive"
+  database_adapter: \Adapters\MysqlAdapter
+
+services:
+  service.storage:
+    class:     Services\Storage\StorageService
+    arguments: ['%database_adapter%', '%database%']
+  service.parser:
+    class:     Services\Parser\ParserService
+    arguments: ['@service.storage']
