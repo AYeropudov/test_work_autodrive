@@ -1,0 +1,9 @@
+1) сбилдить образы
+    docker-compose build
+2) установить зависимости
+    docker-compose run --rm composer
+3) запустить парсер
+    а) docker-compose run --rm php-fpm php app.php
+    В качеcтве файла используется стандартные данные в data/data-light.xml
+    б)  docker-compose run --rm php-fpm php app.php -f=/путь_к_фалу/file.xml
+    любой другой фаил. Если запускаем в докере то убедиться что файлы доступны в образе (values binds).

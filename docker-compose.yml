@@ -6,6 +6,18 @@ services:
       context: .
     volumes:
       - ./src:/var/www/html
+    depends_on:
+      - sqldb
+    networks:
+      - default
+    expose:
+      - 9000
+  composer:
+    restart: "no"
+    build:
+      context: .
+    volumes:
+      - ./src:/var/www/html
     entrypoint: sh -c "/usr/local/bin/composer.phar install"
     depends_on:
       - sqldb
