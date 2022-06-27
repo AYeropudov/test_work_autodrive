@@ -1023,19 +1023,5 @@
       <gear-type>Полный</gear-type>
       <generation_id>21105292</generation_id>
     </offer>
-    <offer>
-      <id>440418</id>
-      <mark>Mercedes</mark>
-      <model>G-Класс</model>
-      <generation>II (W463) (1990-2006)</generation>
-      <year>2005</year>
-      <run>127632</run>
-      <color>Серебристый</color>
-      <body-type>Внедорожник 5 дв.</body-type>
-      <engine-type>Бензин</engine-type>
-      <transmission>Автоматическая</transmission>
-      <gear-type>Полный</gear-type>
-      <generation_id>4760268</generation_id>
-    </offer>
   </offers>
 </auto-catalog>

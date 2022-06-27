@@ -79,4 +79,15 @@ class MysqlAdapter implements IStorageAdapter
         $err = $sth->errorInfo();
         throw new RuntimeException($err[2]);
     }
+
+    public function delete(array $condition, string $tbl)
+    {
+        $sqlQuery = "DELETE FROM $tbl WHERE ".join(" AND ", $condition);
+        $sth = $this->getConnection()->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $res = $sth->execute();
+        if ($res) {
+            return $sth->rowCount();
+        }
+        $this->hadnleError($sth);
+    }
 }

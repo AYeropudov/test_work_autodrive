@@ -48,4 +48,6 @@ interface IStorageService
      * @throws RuntimeException
      */
     public function updateGenerations(ModelCollection $modelCollection): int;
+
+    public function delNotExistOffers(array $existOffersIds);
 }

@@ -19,6 +19,7 @@ class ImportService implements IImportService
     private int $generationsUpdated;
     private int $offersInserted;
     private int $offersUpdated;
+    private int $offersDeleted;
 
     /**
      * @param IStorageService $storageService
@@ -55,6 +56,7 @@ class ImportService implements IImportService
         $this->processOffers();
 
         return [
+            ["title" => "Удвлено Обьявлений", "count" => $this->offersDeleted],
             ["title" => "Добавлено новых Обьявлений", "count" => $this->offersInserted],
             ["title" => "Обновлено Обьявлений", "count" => $this->offersUpdated],
             ["title" => "Добавлено новых Поколений", "count" => $this->generationsInserted],
@@ -71,9 +73,10 @@ class ImportService implements IImportService
         $generationsInDb = $this->getStorageService()->findExistGenerations($idis);
         $generationsToCreate = $generationsInDump->difference($generationsInDb);
         $generationsCandidateToUpdate = $generationsInDump->difference($generationsToCreate);
+        $generationsInDbArray = $generationsInDb->getArrayCopy();
         $generationsToUpdate = $generationsCandidateToUpdate->filterBy(
-            function (IModel $item) use ($generationsInDb){
-                $x = in_array($item, $generationsInDb->getArrayCopy());
+            function (IModel $item) use ($generationsInDbArray){
+                $x = in_array($item, $generationsInDbArray);
                 return !$x;
             });
         $resCreate = $this->getStorageService()->addNewGenerations($generationsToCreate);
@@ -83,6 +86,9 @@ class ImportService implements IImportService
     }
 
     private function processOffers(){
+        #Clear DB before import
+        $cleared = $this->clearDb();
+        $this->setOffersDeleted($cleared);
         $offersInDb = $this->getOffersInDb();
 
         $offersToCreate = $this->getModelCollection()->difference($offersInDb);
@@ -92,10 +98,8 @@ class ImportService implements IImportService
             function (IModel $item) use ($offersInDbAsArray){
                 return !in_array($item, $offersInDbAsArray);
             });
-        $resCreate = $this->getStorageService()->addNewOffers($offersToCreate);
-        $this->setOffersInserted($resCreate);
-        $resUpdate = $this->getStorageService()->updateOffers($offersToUpdate);
-        $this->setOffersUpdated($resUpdate);
+        $this->setOffersInserted($this->getStorageService()->addNewOffers($offersToCreate));
+        $this->setOffersUpdated($this->getStorageService()->updateOffers($offersToUpdate));
     }
     /**
      * @return ModelCollection
@@ -152,6 +156,20 @@ class ImportService implements IImportService
     public function setOffersUpdated(int $offersUpdated): void
     {
         $this->offersUpdated = $offersUpdated;
+    }
+
+    private function clearDb()
+    {
+        $existOffersIds = $this->getModelCollection()->getColumn(function ($item) {return $item->getAttr("id");});
+        return $this->getStorageService()->delNotExistOffers($existOffersIds);
+    }
+
+    /**
+     * @param int $offersDeleted
+     */
+    public function setOffersDeleted(int $offersDeleted): void
+    {
+        $this->offersDeleted = $offersDeleted;
     }
 
 }

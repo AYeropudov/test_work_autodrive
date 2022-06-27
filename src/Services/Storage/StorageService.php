@@ -153,4 +153,13 @@ class StorageService implements IStorageService
         }
         return $counter;
     }
+
+    /**
+     * @param array $existOffersIds
+     * @return mixed
+     */
+    public function delNotExistOffers(array $existOffersIds)
+    {
+        return $this->getStorageAdapter()->delete(["offers.id not in (".join(",",$existOffersIds).")"], Offer::tblName());
+    }
 }
